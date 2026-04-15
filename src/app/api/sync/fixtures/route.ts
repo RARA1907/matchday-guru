@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 const API_SPORTS_KEY = process.env.API_SPORTS_KEY!;
 
@@ -145,9 +145,9 @@ export async function GET(request: Request) {
           },
         };
 
-        const { error } = await supabaseAdmin
+        const { error } = await getSupabaseAdmin()
           .from("fixtures")
-          .upsert(fixtureData, { onConflict: "api_fixture_id" });
+          .upsert(fixtureData as never, { onConflict: "api_fixture_id" });
 
         if (error) {
           console.error(`Error upserting fixture ${fixture.fixture.id}:`, error);

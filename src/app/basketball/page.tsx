@@ -6,6 +6,7 @@ const FB_COLORS = {
   navy: "#002D72",
   yellow: "#FFED00",
   orange: "#F59E0B",
+  green: "#22C55E",
 };
 
 export default async function BasketballPage() {
