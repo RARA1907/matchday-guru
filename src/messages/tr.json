@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "MatchDay",
+    "tagline": "Kulübün. Her Branşı. Her Maçı.",
+    "loading": "Yükleniyor...",
+    "error": "Bir şeyler yanlış gitti",
+    "retry": "Tekrar dene",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "close": "Kapat"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "football": "Futbol",
+    "basketball": "Basketbol",
+    "volleyball": "Voleybol",
+    "calendar": "Takvim",
+    "settings": "Ayarlar",
+    "subscribe": "Abone Ol"
+  },
+  "dashboard": {
+    "todayMatches": "Bugünün Maçları",
+    "upcoming": "Yaklaşan",
+    "live": "CANLI",
+    "noMatches": "Bugün maç yok",
+    "next7Days": "Sonraki 7 Gün"
+  },
+  "branches": {
+    "football": "Futbol",
+    "basketball": "Basketbol",
+    "volleyball": "Voleybol",
+    "table_tennis": "Masa Tenisi",
+    "esports": "E-Spor"
+  },
+  "match": {
+    "vs": "vs",
+    "live": "CANLI",
+    "finished": "MS",
+    "scheduled": "Programda",
+    "postponed": "Ertelenen",
+    "halftime": "DEVRE"
+  },
+  "plans": {
+    "free": "Ücretsiz",
+    "pro": "Pro",
+    "proLive": "Pro Canlı"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "common": {
+    "appName": "MatchDay",
+    "tagline": "Your Club. Every Branch. Every Match.",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "football": "Football",
+    "basketball": "Basketball",
+    "volleyball": "Volleyball",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "subscribe": "Subscribe"
+  },
+  "dashboard": {
+    "todayMatches": "Today's Matches",
+    "upcoming": "Upcoming",
+    "live": "LIVE",
+    "noMatches": "No matches today",
+    "next7Days": "Next 7 Days"
+  },
+  "branches": {
+    "football": "Football",
+    "basketball": "Basketball",
+    "volleyball": "Volleyball",
+    "table_tennis": "Table Tennis",
+    "esports": "E-Sports"
+  },
+  "match": {
+    "vs": "vs",
+    "live": "LIVE",
+    "finished": "FT",
+    "scheduled": "Scheduled",
+    "postponed": "Postponed",
+    "halftime": "HT"
+  },
+  "plans": {
+    "free": "Free",
+    "pro": "Pro",
+    "proLive": "Pro Live"
+  }
+}
