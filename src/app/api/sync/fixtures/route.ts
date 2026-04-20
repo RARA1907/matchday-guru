@@ -118,11 +118,22 @@ export async function GET(request: Request) {
 
         // Determine competition_id based on league
         const competitionIds: Record<number, string> = {
-          197: "00000000-0000-0000-0002-000000000001", // Süper Lig
+          203: "00000000-0000-0000-0002-000000000001", // Süper Lig
+          2: "00000000-0000-0000-0002-000000000006",   // UEFA Champions League
+          3: "00000000-0000-0000-0002-000000000007",   // UEFA Europa League
+          206: "00000000-0000-0000-0002-000000000008", // Türkiye Kupası
+          667: null, // Friendlies Clubs - skip these
           118: "00000000-0000-0000-0002-000000000002", // BSL
           119: "00000000-0000-0000-0002-000000000004", // Vestelmen's
         };
         const competitionId = competitionIds[fixture.league.id] || null;
+
+        // Skip fixtures without a mapped competition (e.g., friendlies)
+        if (!competitionId) {
+          console.log(`Skipping fixture ${fixture.fixture.id} - no competition mapping for league ${fixture.league.id} (${fixture.league.name})`);
+          results[sport as keyof typeof results].error++;
+          continue;
+        }
 
         const fixtureData = {
           api_fixture_id: fixture.fixture.id,
