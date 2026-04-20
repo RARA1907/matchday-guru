@@ -13,6 +13,22 @@ const LEAGUES: Record<string, { leagueId: number; competitionId: string; season:
   volleyball_vestel: { leagueId: 119, competitionId: "00000000-0000-0000-0002-000000000004", season: "2024" },
 };
 
+interface StandingTeam {
+  rank: number;
+  team: { id: number; name: string; logo: string };
+  points: number;
+  goalsDiff: number;
+  group: string;
+  form: string;
+  all: {
+    played: number;
+    win: number;
+    draw: number;
+    lose: number;
+    goals: { for: number; against: number };
+  };
+}
+
 interface StandingsResponse {
   league: {
     id: number;
@@ -20,22 +36,8 @@ interface StandingsResponse {
     country: string;
     logo: string;
     season: number;
+    standings: StandingTeam[][];
   };
-  standings: Array<Array<{
-    rank: number;
-    team: { id: number; name: string; logo: string };
-    points: number;
-    goalsDiff: number;
-    group: string;
-    form: string;
-    all: {
-      played: number;
-      win: number;
-      draw: number;
-      lose: number;
-      goals: { for: number; against: number };
-    };
-  }>>;
 }
 
 async function fetchStandings(leagueId: number, season: string): Promise<StandingsResponse | null> {
@@ -82,7 +84,8 @@ export async function GET(request: Request) {
       continue;
     }
 
-    const standings = data.standings?.[0] || [];
+    // standings is nested inside league object: league.standings[0]
+    const standings = data.league?.standings?.[0] || [];
     console.log(`  Found ${standings.length} teams`);
 
     let successCount = 0;
