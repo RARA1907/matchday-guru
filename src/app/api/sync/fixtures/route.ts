@@ -10,13 +10,6 @@ const FB_TEAMS = {
   volleyball: 1271,
 };
 
-// Season mapping (some sports use different seasons)
-const SEASONS: Record<string, string> = {
-  football: "2024",
-  basketball: "2024",
-  volleyball: "2024",
-};
-
 // Branch IDs
 const BRANCH_IDS: Record<string, string> = {
   football: "00000000-0000-0000-0001-000000000001",
@@ -60,6 +53,58 @@ interface UnifiedFixture {
   extraData: Record<string, unknown>;
 }
 
+// API Response Types
+interface FootballFixtureResponse {
+  fixture: {
+    id: number;
+    date: string;
+    status: { short: string };
+    venue: { name: string } | null;
+  };
+  league: { id: number; name: string; country: string };
+  teams: {
+    home: { name: string; logo: string };
+    away: { name: string; logo: string };
+  };
+  goals: { home: number | null; away: number | null };
+  score: {
+    halftime: { home: number; away: number };
+    fulltime: { home: number; away: number };
+  };
+}
+
+interface BasketballGameResponse {
+  id: number;
+  date: string;
+  status: { short: string };
+  venue: string | null;
+  league: { id: number; name: string };
+  teams: {
+    home: { name: string; logo: string };
+    away: { name: string; logo: string };
+  };
+  scores: {
+    home: { total: number };
+    away: { total: number };
+  };
+}
+
+interface VolleyballGameResponse {
+  id: number;
+  date: string;
+  status: { short: string };
+  venue: string | null;
+  league: { id: number; name: string };
+  teams: {
+    home: { name: string; logo: string };
+    away: { name: string; logo: string };
+  };
+  scores: {
+    home: { total: number };
+    away: { total: number };
+  };
+}
+
 function mapStatus(apiStatus: string): string {
   const statusMap: Record<string, string> = {
     FT: "finished",
@@ -72,13 +117,11 @@ function mapStatus(apiStatus: string): string {
     ABD: "abandoned",
     INT: "interrupted",
     NS: "scheduled",
-    // Basketball/Volleyball statuses
     "Game Finished": "finished",
     "Finished": "finished",
     "In Progress": "live",
     "Postponed": "postponed",
     "Cancelled": "cancelled",
-    " Interrupted": "interrupted",
   };
   return statusMap[apiStatus] || "scheduled";
 }
@@ -95,25 +138,22 @@ async function fetchFootballFixtures(teamId: number): Promise<UnifiedFixture[]> 
       return [];
     }
     const data = await res.json();
-    return (data.response || []).map((f: Record<string, unknown>) => ({
-      id: f.fixture.id as number,
-      date: f.fixture.date as string,
-      status: (f.fixture.status as { short: string }).short,
-      venue: (f.fixture.venue as { name: string } | null)?.name || null,
-      league: {
-        id: (f.league as { id: number }).id,
-        name: (f.league as { name: string }).name,
-      },
-      homeTeam: (f.teams as { home: { name: string } }).home.name,
-      awayTeam: (f.teams as { away: { name: string } }).away.name,
-      homeScore: (f.goals as { home: number | null } | null)?.home ?? null,
-      awayScore: (f.goals as { away: number | null } | null)?.away ?? null,
-      homeLogo: (f.teams as { home: { logo: string } }).home.logo,
-      awayLogo: (f.teams as { away: { logo: string } }).away.logo,
+    return (data.response || []).map((f: FootballFixtureResponse) => ({
+      id: f.fixture.id,
+      date: f.fixture.date,
+      status: f.fixture.status.short,
+      venue: f.fixture.venue?.name || null,
+      league: { id: f.league.id, name: f.league.name },
+      homeTeam: f.teams.home.name,
+      awayTeam: f.teams.away.name,
+      homeScore: f.goals?.home ?? null,
+      awayScore: f.goals?.away ?? null,
+      homeLogo: f.teams.home.logo,
+      awayLogo: f.teams.away.logo,
       extraData: {
-        league_country: (f.league as { country: string }).country,
-        halftime_score: (f.score as { halftime: { home: number; away: number } } | null)?.halftime,
-        fulltime_score: (f.score as { fulltime: { home: number; away: number } } | null)?.fulltime,
+        league_country: f.league.country,
+        halftime_score: f.score?.halftime,
+        fulltime_score: f.score?.fulltime,
       },
     }));
   } catch (error) {
@@ -134,24 +174,19 @@ async function fetchBasketballGames(teamId: number): Promise<UnifiedFixture[]> {
       return [];
     }
     const data = await res.json();
-    return (data.response || []).map((g: Record<string, unknown>) => ({
-      id: g.id as number,
-      date: g.date as string,
-      status: (g.status as { short: string }).short,
-      venue: (g.venue as string | null) || null,
-      league: {
-        id: (g.league as { id: number }).id,
-        name: (g.league as { name: string }).name,
-      },
-      homeTeam: (g.teams as { home: { name: string } }).home.name,
-      awayTeam: (g.teams as { away: { name: string } }).away.name,
-      homeScore: (g.scores as { home: { total: number } } | null)?.home?.total ?? null,
-      awayScore: (g.scores as { away: { total: number } } | null)?.away?.total ?? null,
-      homeLogo: (g.teams as { home: { logo: string } }).home.logo,
-      awayLogo: (g.teams as { away: { logo: string } }).away.logo,
-      extraData: {
-        quarter_scores: g.scores,
-      },
+    return (data.response || []).map((g: BasketballGameResponse) => ({
+      id: g.id,
+      date: g.date,
+      status: g.status.short,
+      venue: g.venue || null,
+      league: { id: g.league.id, name: g.league.name },
+      homeTeam: g.teams.home.name,
+      awayTeam: g.teams.away.name,
+      homeScore: g.scores?.home?.total ?? null,
+      awayScore: g.scores?.away?.total ?? null,
+      homeLogo: g.teams.home.logo,
+      awayLogo: g.teams.away.logo,
+      extraData: { quarter_scores: g.scores },
     }));
   } catch (error) {
     console.error("Basketball fetch error:", error);
@@ -171,24 +206,19 @@ async function fetchVolleyballGames(teamId: number): Promise<UnifiedFixture[]> {
       return [];
     }
     const data = await res.json();
-    return (data.response || []).map((g: Record<string, unknown>) => ({
-      id: g.id as number,
-      date: g.date as string,
-      status: (g.status as { short: string }).short,
-      venue: (g.venue as string | null) || null,
-      league: {
-        id: (g.league as { id: number }).id,
-        name: (g.league as { name: string }).name,
-      },
-      homeTeam: (g.teams as { home: { name: string } }).home.name,
-      awayTeam: (g.teams as { away: { name: string } }).away.name,
-      homeScore: (g.scores as { home: { total: number } } | null)?.home?.total ?? null,
-      awayScore: (g.scores as { away: { total: number } } | null)?.away?.total ?? null,
-      homeLogo: (g.teams as { home: { logo: string } }).home.logo,
-      awayLogo: (g.teams as { away: { logo: string } }).away.logo,
-      extraData: {
-        set_scores: g.scores,
-      },
+    return (data.response || []).map((g: VolleyballGameResponse) => ({
+      id: g.id,
+      date: g.date,
+      status: g.status.short,
+      venue: g.venue || null,
+      league: { id: g.league.id, name: g.league.name },
+      homeTeam: g.teams.home.name,
+      awayTeam: g.teams.away.name,
+      homeScore: g.scores?.home?.total ?? null,
+      awayScore: g.scores?.away?.total ?? null,
+      homeLogo: g.teams.home.logo,
+      awayLogo: g.teams.away.logo,
+      extraData: { set_scores: g.scores },
     }));
   } catch (error) {
     console.error("Volleyball fetch error:", error);
