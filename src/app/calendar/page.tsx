@@ -1,6 +1,14 @@
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
+const BRANCH_IDS = [
+  "00000000-0000-0000-0001-000000000001",
+  "00000000-0000-0000-0001-000000000002",
+  "00000000-0000-0000-0001-000000000003",
+  "00000000-0000-0000-0001-000000000004",
+  "00000000-0000-0000-0001-000000000005",
+];
+
 const BRANCH_INFO: Record<string, { emoji: string; name: string; color: string }> = {
   "00000000-0000-0000-0001-000000000001": { emoji: "⚽", name: "Futbol", color: "#22C55E" },
   "00000000-0000-0000-0001-000000000002": { emoji: "🏀", name: "Basketbol (E)", color: "#F59E0B" },
