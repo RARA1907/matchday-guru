@@ -29,6 +29,8 @@ const LEAGUE_COLORS: Record<string, string> = {
   "TKBL W": "#FB923C",
 };
 
+export const dynamic = 'force-dynamic';
+
 const BRANCH_IDS = [
   "00000000-0000-0000-0001-000000000001",
   "00000000-0000-0000-0001-000000000002",

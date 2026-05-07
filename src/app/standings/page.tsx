@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 const STANDINGS_CONFIG = [
   { competitionId: "00000000-0000-0000-0002-000000000001", name: "Süper Lig", emoji: "⚽", color: "#22C55E" },
   { competitionId: "00000000-0000-0000-0002-000000000006", name: "UCL", emoji: "🏆", color: "#0066CC" },

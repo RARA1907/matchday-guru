@@ -61,6 +61,8 @@ function getDaysInRange(start: Date, days: number) {
   return result;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function CalendarPage() {
   const supabase = createClient();
 
